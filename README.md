@@ -139,6 +139,68 @@ The .p12 contains both the private and the public key, and also information abou
 `keytool -keystore client/src/main/resources/truststore.jks -importcert -file server/src/main/resources/server.cer -alias server -storepass secret`
 
 
+---
+
+
+### Creating a Certificate Authority
+
+ Here we will create your own Certificate Authority and sign the Client and Server certificate with it. 
+
+`keytool -genkeypair -keyalg RSA -keysize 2048 -alias root-ca -dname "CN=Root-CA,OU=Certificate Authority,O=Thunderberry,C=NL" -validity 3650 -ext bc:c -keystore root-ca/identity.jks -storepass secret -keypass secret -deststoretype pkcs12`
+
+### Creating a Certificate Signing Request
+Before Get the certificates signed by the C.A a Certificate Signing Request **(.csr)** must be created. 
+**PS:**The Certificate Authority need these csr files to be able to sign it. The next step will be signing the requests.
+
+*server*
+
+`keytool -certreq -keystore MTLS-MutualTLS-Spring-Kotlin-POC/server/src/main/resources/identity.jks -alias server -keypass secret -storepass secret -keyalg rsa -file MTLS-MutualTLS-Spring-Kotlin-POC/server/src/main/resources/server.csr`
+
+
+*client*
+
+`keytool -certreq -keystore MTLS-MutualTLS-Spring-Kotlin-POC/client/src/main/resources/identity.jks -alias client -keypass secret -storepass secret -keyalg rsa -file MTLS-MutualTLS-Spring-Kotlin-POC/client/src/main/resources/client.csr`
+
+
+## Generate Important Files Before Signing the certificate with the Certificate Signing Request (.csr)
+
+The .csr file can be signed with a *pem* file and the *CA private key*. 
+
+PS: The *pem* file is a container format that might include: public certificate, CA certificates files, may include an entire certificate chain including public key, private key, and root certificates.
+
+### extract the pem and key file from the identity.jks 
+
+#### CA - Converting CA keystore to a p12 file
+
+`keytool -importkeystore -srckeystore root-ca/identity.jks -destkeystore root-ca/root-ca.p12 -srcstoretype jks -deststoretype pkcs12 -srcstorepass secret -deststorepass secret`
+
+#### Create pem file from p12 file
+
+`openssl pkcs12 -in root-ca/root-ca.p12 -out root-ca/root-ca.pem -nokeys -passin pass:secret -passout pass:secret`
+
+#### Create a key file from a p12 file
+
+`openssl pkcs12 -in root-ca/root-ca.p12 -out root-ca/root-ca.key -nocerts -passin pass:secret -passout pass:secret`
+
+### Signing the client certificate
+
+`openssl x509 -req -in MTLS-MutualTLS-Spring-Kotlin-POC/client/src/main/resources/client.csr -CA root-ca/root-ca.pem -CAkey root-ca/root-ca.key -CAcreateserial -out MTLS-MutualTLS-Spring-Kotlin-POC/client/src/main/resources/client-signed.cer -days 1825 -passin pass:secret`
+
+### Signing the server certificate
+
+`openssl x509 -req -in MTLS-MutualTLS-Spring-Kotlin-POC/server/src/main/resources/server.csr -CA root-ca/root-ca.pem -CAkey root-ca/root-ca.key -CAcreateserial -out MTLS-MutualTLS-Spring-Kotlin-POC/server/src/main/resources/server-signed.cer -sha256 -extfile server/src/main/resources/extensions/v3.ext -days 1825 -passin pass:secret`
+
+
+## Replace Self-Signed Certificates by the CA-Signed Certificates (:D)
+
+
+*server*
+1. Extractiong .p12 files 
+
+`keytool -importkeystore -srckeystore server/src/main/resources/identity.jks -destkeystore server/src/main/resources/server.p12 -srcstoretype jks -deststoretype pkcs12 -srcstorepass secret -deststorepass secret`
+
+### How do I import a PKCS12 certificate into a java keystore?
+> keytool -v -importkeystore -srckeystore alice.p12 -srcstoretype PKCS12 -destkeystore bob.jks -deststoretype JKS
 
 ## References 
 [How Http Works]([https://howhttps.works/the-handshake/](https://howhttps.works/the-handshake/))
