@@ -106,6 +106,19 @@ During the SSL handshake,
 
 **WARNING:** If a server wants to do a client authentication too, then the server also maintains a trustStore to verify client.
 
+## Files extensions Definitions
+* PKCS12 - <name>..p12 
+The .p12 contains both the private and the public key, and also information about the owner (name, email address, etc. ) all being certified by a third party. With such certificate, a user can identify himself and authenticate himself to any organization trusting the third party.
+
+### Create a keystore with public and private key
+*server*
+
+`keytool -genkeypair -keyalg RSA -keysize 2048 -alias server -dname "CN=Hakan,OU=Amsterdam,O=Thunderberry,C=NL" -ext "SAN:c=DNS:localhost,IP:127.0.0.1" -validity 3650 -keystore server/src/main/resources/identity.jks -storepass secret -keypass secret -deststoretype pkcs12`
+
+*client*
+`keytool -genkeypair -keyalg RSA -keysize 2048 -alias client -dname "CN=Suleyman,OU=Altindag,O=Altindag,C=NL" -validity 3650 -keystore client/src/main/resources/identity.jks -storepass secret -keypass secret -deststoretype pkcs12`
+
+
 
 ## References 
 [How Http Works]([https://howhttps.works/the-handshake/](https://howhttps.works/the-handshake/))
