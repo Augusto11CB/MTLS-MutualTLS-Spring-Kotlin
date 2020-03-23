@@ -118,6 +118,16 @@ The .p12 contains both the private and the public key, and also information abou
 *client*
 `keytool -genkeypair -keyalg RSA -keysize 2048 -alias client -dname "CN=Suleyman,OU=Altindag,O=Altindag,C=NL" -validity 3650 -keystore client/src/main/resources/identity.jks -storepass secret -keypass secret -deststoretype pkcs12`
 
+### Export certificate
+
+*server*
+
+`keytool -exportcert -keystore server/src/main/resources/identity.jks -storepass secret -alias server -rfc -file server/src/main/resources/server.cer`
+
+*client*
+
+`keytool -exportcert -keystore client/src/main/resources/identity.jks -storepass secret -alias client -rfc -file client/src/main/resources/client.cer`
+
 
 
 ## References 
