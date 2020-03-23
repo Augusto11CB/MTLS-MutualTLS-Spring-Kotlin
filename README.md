@@ -129,6 +129,16 @@ The .p12 contains both the private and the public key, and also information abou
 `keytool -exportcert -keystore client/src/main/resources/identity.jks -storepass secret -alias client -rfc -file client/src/main/resources/client.cer`
 
 
+### Create trusststore 
+
+*server*
+`keytool -keystore server/src/main/resources/truststore.jks -importcert -file client/src/test/resources/client.cer -alias client -storepass secret`
+
+*client*
+
+`keytool -keystore client/src/main/resources/truststore.jks -importcert -file server/src/main/resources/server.cer -alias server -storepass secret`
+
+
 
 ## References 
 [How Http Works]([https://howhttps.works/the-handshake/](https://howhttps.works/the-handshake/))
