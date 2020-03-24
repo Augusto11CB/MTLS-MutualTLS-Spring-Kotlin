@@ -202,6 +202,10 @@ PS: The *pem* file is a container format that might include: public certificate,
 ### How do I import a PKCS12 certificate into a java keystore?
 > keytool -v -importkeystore -srckeystore alice.p12 -srcstoretype PKCS12 -destkeystore bob.jks -deststoretype JKS
 
+---
+### How to check certificate name and alias in keystore/truststore files
+`keytool -v -list -keystore Server/src/main/resources/truststore.jks`
+
 ## References 
 [How Http Works]([https://howhttps.works/the-handshake/](https://howhttps.works/the-handshake/))
 [Trust Store vs Key Store - creating with keytool](https://stackoverflow.com/questions/6340918/trust-store-vs-key-store-creating-with-keytool)](https://stackoverflow.com/questions/6340918/trust-store-vs-key-store-creating-with-keytool)
