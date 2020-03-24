@@ -1,1 +1,1 @@
-rootProject.name = "MTLS-MutualTLS-Spring-Kotlin-POC"
+rootProject.name = "Server-MTLS-MutualTLS-Spring-Kotlin-POC"
