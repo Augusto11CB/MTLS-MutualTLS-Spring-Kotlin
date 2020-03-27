@@ -206,6 +206,10 @@ PS: The *pem* file is a container format that might include: public certificate,
 ### How to check certificate name and alias in keystore/truststore files
 `keytool -v -list -keystore Server/src/main/resources/truststore.jks`
 
+---
+
+`keytool -noprompt -storepass changeit -importcert -keystore {path-java}\jdk1.8.0_144\jre\lib\security\cacerts -file {path}\portal-dev.crt -alias nameNameName`
+
 ## References 
 [How Http Works]([https://howhttps.works/the-handshake/](https://howhttps.works/the-handshake/))
 [Trust Store vs Key Store - creating with keytool](https://stackoverflow.com/questions/6340918/trust-store-vs-key-store-creating-with-keytool)](https://stackoverflow.com/questions/6340918/trust-store-vs-key-store-creating-with-keytool)
