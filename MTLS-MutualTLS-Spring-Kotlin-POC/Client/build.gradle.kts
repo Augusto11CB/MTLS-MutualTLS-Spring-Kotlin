@@ -26,7 +26,7 @@ repositories {
 	jcenter()
 }
 
-extra["kotlinVersion"] = "'1.3.61'"
+extra["kotlinVersion"] = "1.3.61"
 extra["springBootAdminVersion"] = "2.1.6"
 extra["springCloudVersion"] = "Greenwich.SR5"
 
